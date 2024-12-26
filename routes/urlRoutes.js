@@ -20,4 +20,6 @@ router.post(
   controller.handleShortenUrl
 );
 
+router.get("/shorten/:alias", controller.handleRedirectAliasUrl);
+
 module.exports = router;

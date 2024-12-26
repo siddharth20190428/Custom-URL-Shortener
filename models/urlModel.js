@@ -1,6 +1,13 @@
 const pool = require("../config/db"); // Adjust the path as necessary
 
 class UrlModel {
+  static async getUrl(alias) {
+    const result = await pool.query("SELECT * FROM urls WHERE alias = $1", [
+      alias,
+    ]);
+    return result;
+  }
+
   // Method to check if an alias already exists
   static async aliasExists(alias) {
     const result = await pool.query("SELECT * FROM urls WHERE alias = $1", [

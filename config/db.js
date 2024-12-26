@@ -68,9 +68,36 @@ const createUrlsTable = async () => {
       alias VARCHAR(255) UNIQUE NOT NULL,
       original_url TEXT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      total_clicks INT DEFAULT 0,
-      unique_clicks INT DEFAULT 0,
       topic VARCHAR(255)
+    );
+  `;
+
+  try {
+    await pool.query(query);
+    console.log(`Table "${tableName}" created successfully.`);
+  } catch (err) {
+    console.error(`Error creating table "${tableName}":`, err);
+  }
+};
+
+// Create analytics table for tracking redirects
+const createAnalyticsTable = async () => {
+  const tableName = "analytics";
+  const exists = await checkTableExists(tableName);
+
+  if (exists) {
+    console.log(`Table "${tableName}" already exists.`);
+    return;
+  }
+
+  const query = `
+    CREATE TABLE IF NOT EXISTS analytics (
+      id SERIAL PRIMARY KEY,
+      url_id INT REFERENCES urls(id),
+      user_agent VARCHAR(255),
+      ip_address VARCHAR(255),
+      geolocation JSONB,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;
 
@@ -86,6 +113,7 @@ const createUrlsTable = async () => {
 const initTables = async () => {
   await createUsersTable();
   await createUrlsTable();
+  await createAnalyticsTable();
 };
 
 initTables();
