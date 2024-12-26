@@ -17,6 +17,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.set("trust proxy", true);
+
 // Use authentication routes
 app.use("/auth", authRoutes);
 app.use("/api", urlRoutes);
