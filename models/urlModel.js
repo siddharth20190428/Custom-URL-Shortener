@@ -1,11 +1,29 @@
 const pool = require("../config/db"); // Adjust the path as necessary
 
 class UrlModel {
-  static async getUrl(alias) {
+  // Fetch URL by alias
+  static async getUrlByAlias(alias) {
     const result = await pool.query("SELECT * FROM urls WHERE alias = $1", [
       alias,
     ]);
     return result;
+  }
+  // Fetch URLs by topic
+  static async getUrlsByTopic(topic, userId) {
+    const result = await pool.query(
+      "SELECT id, alias FROM urls WHERE topic = $1 AND user_id = $2",
+      [topic, userId]
+    );
+    return result.rows;
+  }
+
+  // Fetch URLs by user ID
+  static async getUrlsByUserId(userId) {
+    const result = await pool.query(
+      "SELECT id, alias FROM urls WHERE user_id = $1",
+      [userId]
+    );
+    return result.rows;
   }
 
   // Method to check if an alias already exists

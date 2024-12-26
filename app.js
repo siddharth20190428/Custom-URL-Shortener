@@ -4,6 +4,7 @@ const session = require("express-session");
 const passport = require("./middlewares/passport");
 const authRoutes = require("./routes/authRoutes");
 const urlRoutes = require("./routes/urlRoutes");
+const analyticsRoutes = require("./routes/analyticsRoutes");
 
 const app = express();
 const PORT = 3000;
@@ -19,6 +20,7 @@ app.use(passport.session());
 // Use authentication routes
 app.use("/auth", authRoutes);
 app.use("/api", urlRoutes);
+app.use("/api/analytics", analyticsRoutes);
 
 // Start the server
 app.listen(PORT, () => {

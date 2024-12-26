@@ -39,7 +39,7 @@ const handleRedirectAliasUrl = async (req, res) => {
 
   try {
     // Find the original URL based on the alias
-    const urlResult = await UrlModel.getUrl(alias);
+    const urlResult = await UrlModel.getUrlByAlias(alias);
 
     if (urlResult.rows.length === 0) {
       return res.status(404).send("Short URL not found");
