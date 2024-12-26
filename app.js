@@ -3,7 +3,7 @@ const express = require("express");
 const session = require("express-session");
 const passport = require("./middlewares/passport");
 const authRoutes = require("./routes/authRoutes");
-const pool = require("./config/db");
+const urlRoutes = require("./routes/urlRoutes");
 
 const app = express();
 const PORT = 3000;
@@ -17,7 +17,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Use authentication routes
-app.use("/", authRoutes);
+app.use("/auth", authRoutes);
+app.use("/api", urlRoutes);
 
 // Start the server
 app.listen(PORT, () => {
