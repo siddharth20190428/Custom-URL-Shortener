@@ -3,7 +3,10 @@ const AnalyticsModel = require("../models/analyticsModel");
 const geoip = require("geoip-lite");
 const redis = require("redis");
 const { promisify } = require("util");
-const redisClient = redis.createClient();
+const redisClient = redis.createClient({
+  host: process.env.REDIS_HOST,
+  port: process.env.REDIS_PORT,
+});
 const getAsync = promisify(redisClient.get).bind(redisClient);
 const setAsync = promisify(redisClient.set).bind(redisClient);
 
