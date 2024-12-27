@@ -7,6 +7,9 @@ const pool = new Pool({
   database: process.env.POSTGRES_DB,
   password: process.env.POSTGRES_PASSWORD,
   port: 5432,
+  ssl: {
+    rejectUnauthorized: false, // In production, set this to true with valid certificates
+  },
 });
 
 // Function to check if a table exists
