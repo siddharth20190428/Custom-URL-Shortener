@@ -1,6 +1,20 @@
 const pool = require("../config/db"); // Adjust the path as necessary
 
 class UrlModel {
+  static BASE62 =
+    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  static idCounter = 1;
+
+  static encode(num) {
+    let base62 = "";
+    while (num > 0) {
+      const remainder = num % 62;
+      base62 = BASE62[remainder] + base62;
+      num = Math.floor(num / 62);
+    }
+    return base62 || BASE62[0]; // Return '0' if num is 0
+  }
+
   // Fetch URL by alias
   static async getUrlByAlias(alias) {
     const result = await pool.query("SELECT * FROM urls WHERE alias = $1", [
@@ -36,14 +50,23 @@ class UrlModel {
 
   // Method to add a new URL
   static async addUrl(originalUrl, customAlias, topic, user_id) {
-    let alias = customAlias ? customAlias : new Date().now(); // Generate a unique alias if not provided
-
     // Check if the alias already exists
-    if (await this.aliasExists(alias)) {
-      throw new Error(
-        "Custom alias already exists. Please choose another one."
-      );
+    if (customAlias) {
+      if (await this.aliasExists(customAlias)) {
+        throw new Error(
+          "Custom alias already exists. Please choose another one."
+        );
+      } else if (customAlias.length > 8)
+        throw new Error("Custom alias must be less than or equal to 8 chars.");
     }
+
+    let alias = customAlias ? customAlias : this.encode(this.idCounter); // Generate a unique alias if not provided
+
+    while (alias.length < 8) {
+      alias = "0" + alias; // Pad with '0'
+    }
+
+    this.idCounter++;
 
     const createdAt = new Date();
     await pool.query(

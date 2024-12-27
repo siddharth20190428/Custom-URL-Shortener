@@ -12,7 +12,11 @@ const PORT = 3000;
 // Middleware
 app.use(express.json());
 app.use(
-  session({ secret: "your_secret_key", resave: false, saveUninitialized: true })
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+  })
 );
 app.use(passport.initialize());
 app.use(passport.session());
